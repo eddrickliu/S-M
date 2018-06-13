@@ -1,5 +1,6 @@
 package com.example.eddrickliu.sm;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,12 +38,12 @@ public class MainActivity extends AppCompatActivity {
 
     private CircleImageView navProfileImage;
     private TextView navProfileName;
+    private ImageButton addNewPost;
 
     private FirebaseAuth mAuth;
     private DatabaseReference userRef;
 
     String currentUserId;
-
 
 
     @Override
@@ -57,8 +59,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Home");
 
+        addNewPost = (ImageButton) findViewById(R.id.add_new_post_button);
+
         drawerLayout = (DrawerLayout) findViewById(R.id.drawable_layout);
-        actionBarDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, drawerLayout, R.string.drawer_open,R.string.drawer_close);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, drawerLayout, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -72,15 +76,15 @@ public class MainActivity extends AppCompatActivity {
         userRef.child(currentUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    if(dataSnapshot.hasChild("fullname")){
+                if (dataSnapshot.exists()) {
+                    if (dataSnapshot.hasChild("fullname")) {
                         String fullname = dataSnapshot.child("fullname").getValue().toString();
                         navProfileName.setText(fullname);
                     }
-                    if(dataSnapshot.hasChild("profilepic")){
+                    if (dataSnapshot.hasChild("profilepic")) {
                         String image = dataSnapshot.child("profilepic").getValue().toString();
                         Picasso.get().load(image).placeholder(R.drawable.profile).into(navProfileImage);
-                    }else{
+                    } else {
                         Toast.makeText(MainActivity.this, "Profile name does not exist", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -100,7 +104,21 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        addNewPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendUserToPostActivity();
+            }
+
+        });
     }
+
+    private void sendUserToPostActivity() {
+        Intent addNewPostIntent = new Intent(MainActivity.this,PostActivity.class);
+        startActivity(addNewPostIntent);
+    }
+
 
     @Override
     protected void onStart(){
@@ -159,6 +177,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void UserMenuSelector(MenuItem item) {
         switch (item.getItemId()){
+            case R.id.nav_post:
+                sendUserToPostActivity();
+                break;
             case R.id.nav_profile:
                 Toast.makeText(this,"Profile",Toast.LENGTH_SHORT).show();
                 break;
