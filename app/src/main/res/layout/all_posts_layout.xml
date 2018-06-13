@@ -38,7 +38,7 @@
                     android:layout_height="wrap_content"
                     android:text="user_name"
                     android:layout_marginLeft="5dp"
-                    android:marginTop="10dp"
+                    android:layout_marginTop="10dp"
                     android:textAlignment="textStart"
                     android:textSize="16dp"
                     android:textStyle="bold"
