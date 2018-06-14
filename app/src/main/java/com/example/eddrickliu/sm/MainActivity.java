@@ -2,6 +2,7 @@ package com.example.eddrickliu.sm;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -97,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     if (dataSnapshot.hasChild("profilepic")) {
                         String image = dataSnapshot.child("profilepic").getValue().toString();
-                        Picasso.get().load(image).placeholder(R.drawable.profile).into(navProfileImage);
+                        Picasso.with(MainActivity.this).load(image).placeholder(R.drawable.profile).into(navProfileImage);
                     } else {
                         Toast.makeText(MainActivity.this, "Profile name does not exist", Toast.LENGTH_SHORT).show();
                     }
@@ -131,21 +133,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void DisplayAllUsersPosts() {
+        /*
         FirebaseRecyclerAdapter<Posts, PostViewHolder> firebaseRecyclerAdapter =
-                new FirebaseRecyclerAdapter<Posts, PostViewHolder>
-                        (Posts.class,R.layout.all_posts_layout,PostViewHolder.class,postRef)
-                {
+                new FirebaseRecyclerAdapter<Posts, PostViewHolder>(Posts.class, R.layout.all_posts_layout,PostViewHolder.class,postRef) {
                     @Override
-                    protected void onBindViewHolder(@NonNull PostViewHolder holder, int position, @NonNull Posts model) {
+                    protected void populateViewHolder(PostViewHolder viewHolder, Posts model, int position) {
 
-                    }
+                        viewHolder.setFullname(model.getFullname());
+                        viewHolder.setTime(model.getTime());
+                        viewHolder.setDate(model.getDate());
+                        viewHolder.setDescription(model.getDescription());
+                        viewHolder.setProfilepic(getApplicationContext(), model.getProfilepic());
+                        viewHolder.setPostpic(getApplicationContext(), model.getPostpic());
 
-                    @NonNull
-                    @Override
-                    public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                        return null;
                     }
                 };
+        postList.setAdapter(firebaseRecyclerAdapter);
+        */
+
     }
 
     public static class PostViewHolder extends RecyclerView.ViewHolder{
@@ -156,6 +161,36 @@ public class MainActivity extends AppCompatActivity {
             super(itemView);
             mView = itemView;
         }
+        public void setTime(String time) {
+            TextView timeT = (TextView) mView.findViewById(R.id.post_time);
+            timeT.setText("   " + time);
+        }
+
+        public void setDate(String date) {
+            TextView dateT = (TextView) mView.findViewById(R.id.post_date);
+            dateT.setText("   " + date);
+        }
+
+        public void setPostpic(Context ctx, String postpic) {
+            CircleImageView image = (CircleImageView) mView.findViewById(R.id.post_image);
+            Picasso.with(ctx).load(postpic).into(image);
+        }
+
+        public void setDescription(String description) {
+            TextView descrip = (TextView) mView.findViewById(R.id.post_description);
+            descrip.setText(description);
+        }
+
+        public void setProfilepic(Context ctx1, String profilepic) {
+            ImageView image = (ImageView) mView.findViewById(R.id.post_profile_image);
+            Picasso.with(ctx1).load(profilepic).into(image);
+        }
+
+        public void setFullname(String fullname) {
+            TextView username = (TextView) mView.findViewById(R.id.post_user_name);
+            username.setText(fullname);
+        }
+
     }
 
     private void sendUserToPostActivity() {

@@ -88,7 +88,7 @@ public class SetupActivity extends AppCompatActivity {
                 if(dataSnapshot.exists()){
                     if(dataSnapshot.hasChild("profilepic")) {
                         String image = dataSnapshot.child("profilepic").getValue().toString();
-                        Picasso.get().load(image).placeholder(R.drawable.profile).into(profilePic);
+                        Picasso.with(SetupActivity.this).load(image).placeholder(R.drawable.profile).into(profilePic);
                     }else{
                         Toast.makeText(SetupActivity.this, "Please select profile image first", Toast.LENGTH_SHORT).show();
                     }
