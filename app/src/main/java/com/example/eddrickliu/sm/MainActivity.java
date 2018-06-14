@@ -198,6 +198,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(addNewPostIntent);
     }
 
+    private void sendUserToPlayMusictActivity() {
+        Intent playMusicIntent = new Intent(MainActivity.this,PlayMusicActivity.class);
+        startActivity(playMusicIntent);
+    }
+
 
     @Override
     protected void onStart(){
@@ -276,6 +281,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.nav_music:
                 Toast.makeText(this,"Listen",Toast.LENGTH_SHORT).show();
+                sendUserToPlayMusictActivity();
                 break;
             case R.id.nav_video:
                 Toast.makeText(this,"Watch",Toast.LENGTH_SHORT).show();
